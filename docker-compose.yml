@@ -1,0 +1,95 @@
+services:
+    app:
+        build:
+            context: .
+            dockerfile: docker/php/Dockerfile
+        container_name: repairhub-app
+        working_dir: /var/www/html
+        volumes:
+            - ./:/var/www/html
+        environment:
+            APP_ENV: local
+            APP_DEBUG: "true"
+            APP_URL: http://localhost:8000
+            DB_CONNECTION: mysql
+            DB_HOST: mysql
+            DB_PORT: 3306
+            DB_DATABASE: repairhub
+            DB_USERNAME: repairhub
+            DB_PASSWORD: secret
+            CACHE_STORE: database
+            SESSION_DRIVER: database
+            QUEUE_CONNECTION: database
+            REDIS_HOST: redis
+            MAIL_MAILER: smtp
+            MAIL_HOST: mailpit
+            MAIL_PORT: 1025
+            MAIL_USERNAME: null
+            MAIL_PASSWORD: null
+            MAIL_ENCRYPTION: null
+        depends_on:
+            mysql:
+                condition: service_healthy
+            redis:
+                condition: service_started
+        command: sh -lc "php artisan key:generate --force || true && php artisan migrate --force || true && php-fpm"
+        networks:
+            - repairhub
+
+    nginx:
+        image: nginx:1.27-alpine
+        container_name: repairhub-nginx
+        ports:
+            - "8000:80"
+        volumes:
+            - ./:/var/www/html
+            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+        depends_on:
+            app:
+                condition: service_started
+        networks:
+            - repairhub
+
+    mysql:
+        image: mysql:8.4
+        container_name: repairhub-mysql
+        ports:
+            - "3307:3306"   # đổi từ 3306:3306 → 3307:3306
+        environment:
+            MYSQL_DATABASE: repairhub
+            MYSQL_USER: repairhub
+            MYSQL_PASSWORD: secret
+            MYSQL_ROOT_PASSWORD: root
+        volumes:
+            - mysql_data:/var/lib/mysql
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+        networks:
+            - repairhub
+
+    redis:
+        image: redis:7-alpine
+        container_name: repairhub-redis
+        ports:
+            - "6379:6379"
+        networks:
+            - repairhub
+
+    mailpit:
+        image: axllent/mailpit:latest
+        container_name: repairhub-mailpit
+        ports:
+            - "8025:8025"
+            - "1025:1025"
+        networks:
+            - repairhub
+
+networks:
+    repairhub:
+        driver: bridge
+
+volumes:
+    mysql_data:
