@@ -2,8 +2,107 @@
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
+@source '../views/**/*.blade.php';
 
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --color-bg: #0b1220;
+    --color-bg-elevated: #11192a;
+    --color-border: #1e2a3f;
+    --color-text: #e4e9f0;
+    --color-text-muted: #7a8aa0;
+    --color-accent: #2563eb;
+    --color-accent-hover: #1d4ed8;
+}
+
+@layer base {
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+        margin: 0;
+        font-family: var(--font-sans);
+        background-color: var(--color-bg);
+        color: var(--color-text);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+@layer components {
+    .welcome-container {
+        @apply min-h-screen flex items-center justify-center px-4;
+    }
+
+    .welcome-card {
+        @apply w-full max-w-md;
+        background-color: var(--color-bg-elevated);
+        border: 1px solid var(--color-border);
+        border-radius: 12px;
+        padding: 2.5rem 2rem;
+        text-align: center;
+    }
+
+    .welcome-logo {
+        @apply w-14 h-14 mx-auto mb-4 flex items-center justify-center;
+        background: linear-gradient(135deg, var(--color-accent), #3b82f6);
+        border-radius: 10px;
+        color: white;
+        font-weight: 700;
+        font-size: 1.25rem;
+        letter-spacing: -0.02em;
+    }
+
+    .welcome-title {
+        @apply text-xl font-semibold mb-1;
+        color: var(--color-text);
+    }
+
+    .welcome-subtitle {
+        @apply text-sm mb-6;
+        color: var(--color-text-muted);
+    }
+
+    .welcome-actions {
+        @apply flex flex-col gap-3;
+    }
+
+    .btn {
+        @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg
+               text-sm font-medium transition-colors duration-150
+               focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+    }
+
+    .btn-primary {
+        background-color: var(--color-accent);
+        color: white;
+        border: 1px solid transparent;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--color-accent-hover);
+    }
+
+    .btn-primary:focus-visible {
+        --tw-ring-color: var(--color-accent);
+        --tw-ring-offset-color: var(--color-bg);
+    }
+
+    .btn-ghost {
+        background-color: transparent;
+        color: var(--color-text-muted);
+        border: 1px solid var(--color-border);
+    }
+
+    .btn-ghost:hover {
+        background-color: var(--color-bg);
+        color: var(--color-text);
+        border-color: var(--color-accent);
+    }
+
+    .btn-ghost:focus-visible {
+        --tw-ring-color: var(--color-accent);
+        --tw-ring-offset-color: var(--color-bg);
+    }
 }
