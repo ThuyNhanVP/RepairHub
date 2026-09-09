@@ -1,0 +1,113 @@
+@import 'tailwindcss';
+
+@theme {
+    --color-login-bg: #0b1220;
+    --color-login-card: #11192a;
+    --color-login-border: #1e2a3f;
+    --color-login-text: #e4e9f0;
+    --color-login-muted: #7a8aa0;
+    --color-login-accent: #2563eb;
+    --color-login-accent-hover: #1d4ed8;
+    --color-login-error-bg: #2d1215;
+    --color-login-error-text: #fca5a5;
+    --color-login-error-border: #7f1d1d;
+    --color-login-input-bg: #0b1220;
+    --color-login-input-border: #2a3650;
+    --color-login-input-focus: #3b82f6;
+}
+
+@layer base {
+    body.login-page {
+        margin: 0;
+        font-family: var(--font-sans);
+        background-color: var(--color-login-bg);
+        color: var(--color-login-text);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+@layer components {
+    .login-container {
+        @apply min-h-screen flex items-center justify-center px-4;
+    }
+
+    .login-card {
+        @apply w-full max-w-md;
+        background-color: var(--color-login-card);
+        border: 1px solid var(--color-login-border);
+        border-radius: 12px;
+        padding: 2.5rem 2rem;
+    }
+
+    .login-logo {
+        @apply w-14 h-14 mb-4 flex items-center justify-center;
+        background: linear-gradient(135deg, var(--color-login-accent), #3b82f6);
+        border-radius: 10px;
+        color: white;
+        font-weight: 700;
+        font-size: 1.25rem;
+        letter-spacing: -0.02em;
+    }
+
+    .login-title {
+        @apply text-xl font-semibold mb-1;
+        color: var(--color-login-text);
+    }
+
+    .login-subtitle {
+        @apply text-sm mb-6;
+        color: var(--color-login-muted);
+    }
+
+    .login-error {
+        @apply mb-4 p-4 text-sm rounded-lg;
+        background-color: var(--color-login-error-bg);
+        color: var(--color-login-error-text);
+        border: 1px solid var(--color-login-error-border);
+    }
+
+    .login-error ul {
+        @apply list-disc space-y-1 pl-5;
+    }
+
+    .login-form {
+        @apply space-y-4;
+    }
+
+    .login-field {
+        @apply block mb-1 text-sm font-medium;
+        color: var(--color-login-muted);
+    }
+
+    .login-input {
+        @apply w-full px-4 py-2.5 rounded-lg text-sm outline-none transition-colors duration-150;
+        background-color: var(--color-login-input-bg);
+        color: var(--color-login-text);
+        border: 1px solid var(--color-login-input-border);
+    }
+
+    .login-input:focus {
+        border-color: var(--color-login-input-focus);
+    }
+
+    .login-checkbox-label {
+        @apply flex items-center gap-2 text-sm cursor-pointer;
+        color: var(--color-login-muted);
+    }
+
+    .login-checkbox {
+        @apply rounded;
+        accent-color: var(--color-login-accent);
+    }
+
+    .login-btn {
+        @apply w-full px-4 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 cursor-pointer border-none;
+        background-color: var(--color-login-accent);
+        color: white;
+    }
+
+    .login-btn:hover {
+        background-color: var(--color-login-accent-hover);
+    }
+}
