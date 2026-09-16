@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\PartController;
 use App\Http\Controllers\ReceptionController;
 use App\Http\Controllers\RepairJobController;
 use Illuminate\Support\Facades\Route;
@@ -24,4 +25,9 @@ Route::middleware('auth')->group(function (): void {
     
     Route::resource('repair-jobs', RepairJobController::class)->except(['create', 'store']);
     Route::post('repair-jobs/{repair_job}/add-step', [RepairJobController::class, 'addStep'])->name('repair-jobs.add-step');
+
+    Route::resource('parts', PartController::class);
+    Route::post('parts/{part}/add-stock', [PartController::class, 'addStock'])->name('parts.add-stock');
+    Route::post('parts/{part}/remove-stock', [PartController::class, 'removeStock'])->name('parts.remove-stock');
+    Route::post('parts/{part}/adjust-stock', [PartController::class, 'adjustStock'])->name('parts.adjust-stock');
 });
