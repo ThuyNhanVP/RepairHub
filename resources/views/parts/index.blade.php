@@ -24,8 +24,8 @@
 
             <form method="GET" action="{{ route('parts.index') }}" class="cust-card mb-6">
                 <div class="cust-card-body flex flex-wrap gap-4">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Tìm tên, SKU, hãng..." class="cust-input flex-1 min-w-[200px]">
-                    <select name="category_id" class="cust-input max-w-[200px]">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Tìm tên, SKU, hãng..." class="cust-input min-w-[200px] flex-1">
+                    <select name="category_id" class="cust-input w-full md:max-w-[240px]">
                         <option value="">Tất cả danh mục</option>
                         @foreach ($categories as $category)
                             <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
