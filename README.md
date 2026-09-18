@@ -27,11 +27,6 @@ docker compose exec app composer install
 docker compose exec app php artisan key:generate
 docker compose exec app php artisan migrate
 ```
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
 ```bash
 composer require laravel/boost --dev
 
