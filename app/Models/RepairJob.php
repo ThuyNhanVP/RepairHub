@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 #[Fillable([
     'reception_id',
@@ -49,5 +50,10 @@ class RepairJob extends Model
     public function steps(): HasMany
     {
         return $this->hasMany(RepairStep::class)->orderBy('performed_at', 'asc');
+    }
+
+    public function warranty(): HasOne
+    {
+        return $this->hasOne(Warranty::class);
     }
 }
