@@ -1,7 +1,54 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Sửa bảo hành</title>@if (file_exists(public_path('build/manifest.json'))) @vite(['resources/css/app.css', 'resources/css/login.css', 'resources/css/customers.css']) @endif</head>
-<body class="customers-page"><div class="cust-layout"><header class="cust-header"><div class="cust-header-inner"><h1 class="cust-title">Sửa {{ $warranty->warranty_code }}</h1><a href="{{ route('warranties.show', $warranty) }}" class="cust-btn cust-btn-secondary">Quay lại</a></div></header>
-<main class="cust-main"><div class="cust-card"><div class="cust-card-body"><form method="POST" action="{{ route('warranties.update', $warranty) }}" class="cust-form">@csrf @method('PUT')
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label class="cust-label">Mã bảo hành</label><input name="warranty_code" value="{{ old('warranty_code', $warranty->warranty_code) }}" class="cust-input" required></div><div><label class="cust-label">Ngày bắt đầu *</label><input type="date" name="start_date" value="{{ old('start_date', $warranty->start_date->toDateString()) }}" class="cust-input" required></div><div><label class="cust-label">Thời hạn (tháng) *</label><input type="number" name="duration_months" value="{{ old('duration_months', $warranty->duration_months) }}" min="1" max="120" class="cust-input" required></div><div><label class="cust-label">Trạng thái *</label><select name="status" class="cust-input"><option value="active" @selected(old('status', $warranty->status) === 'active')>Còn hạn</option><option value="expired" @selected(old('status', $warranty->status) === 'expired')>Hết hạn</option><option value="void" @selected(old('status', $warranty->status) === 'void')>Đã hủy</option></select></div></div>
-<div><label class="cust-label">Điều khoản</label><textarea name="terms" rows="4" class="cust-textarea">{{ old('terms', $warranty->terms) }}</textarea></div><div class="cust-actions"><button class="cust-btn cust-btn-primary">Lưu thay đổi</button></div></form></div></div></main></div></body></html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sửa bảo hành</title>@if (file_exists(public_path('build/manifest.json')))
+    @vite(['resources/css/app.css', 'resources/css/login.css', 'resources/css/customers.css']) @endif
+</head>
+
+<body class="customers-page">
+    <div class="cust-layout">
+        <header class="cust-header">
+            <div class="cust-header-inner">
+                <h1 class="cust-title">Sửa {{ $warranty->warranty_code }}</h1><a
+                    href="{{ route('warranties.show', $warranty) }}" class="cust-btn cust-btn-secondary">Quay lại</a>
+            </div>
+        </header>
+        <main class="cust-main">
+            <div class="cust-card">
+                <div class="cust-card-body">
+                    <form method="POST" action="{{ route('warranties.update', $warranty) }}" class="cust-form">@csrf
+                        @method('PUT')
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div><label class="cust-label">Mã bảo hành</label><input name="warranty_code"
+                                    value="{{ old('warranty_code', $warranty->warranty_code) }}" class="cust-input"
+                                    required></div>
+                            <div><label class="cust-label">Ngày bắt đầu *</label><input type="date" name="start_date"
+                                    value="{{ old('start_date', $warranty->start_date->toDateString()) }}"
+                                    class="cust-input" required></div>
+                            <div><label class="cust-label">Thời hạn (tháng) *</label><input type="number"
+                                    name="duration_months"
+                                    value="{{ old('duration_months', $warranty->duration_months) }}" min="1" max="120"
+                                    class="cust-input" required></div>
+                            <div><label class="cust-label">Trạng thái *</label><select name="status" class="cust-input">
+                                    <option value="active" @selected(old('status', $warranty->status) === 'active')>Còn
+                                        hạn</option>
+                                    <option value="expired" @selected(old('status', $warranty->status) === 'expired')>Hết
+                                        hạn</option>
+                                    <option value="void" @selected(old('status', $warranty->status) === 'void')>Đã hủy
+                                    </option>
+                                </select></div>
+                        </div>
+                        <div><label class="cust-label">Điều khoản</label><textarea name="terms" rows="4"
+                                class="cust-textarea">{{ old('terms', $warranty->terms) }}</textarea></div>
+                        <div class="cust-actions"><button class="cust-btn cust-btn-primary">Lưu thay đổi</button></div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

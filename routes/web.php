@@ -5,6 +5,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PartController;
 use App\Http\Controllers\ReceptionController;
 use App\Http\Controllers\RepairJobController;
+use App\Http\Controllers\WarrantyClaimController;
 use App\Http\Controllers\WarrantyController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,6 +29,7 @@ Route::middleware('auth')->group(function (): void {
     Route::post('repair-jobs/{repair_job}/add-step', [RepairJobController::class, 'addStep'])->name('repair-jobs.add-step');
 
     Route::resource('warranties', WarrantyController::class);
+    Route::resource('warranty-claims', WarrantyClaimController::class);
 
     Route::resource('parts', PartController::class);
     Route::post('parts/{part}/add-stock', [PartController::class, 'addStock'])->name('parts.add-stock');
