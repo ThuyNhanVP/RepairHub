@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable([
     'repair_job_id',
@@ -41,6 +42,11 @@ class Warranty extends Model
     public function device(): BelongsTo
     {
         return $this->belongsTo(Device::class);
+    }
+
+    public function claims(): HasMany
+    {
+        return $this->hasMany(WarrantyClaim::class)->latest('received_at');
     }
 
     public function isExpired(): bool
