@@ -3,8 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\RepairJob;
-use App\Models\RepairStep;
-use App\Models\Reception;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -55,12 +53,28 @@ class RepairJobCrudTest extends TestCase
             'status' => 'diagnosed',
             'diagnosis' => 'Lỗi mainboard',
         ]);
-        
+
         // Check if status change step is created
         $this->assertDatabaseHas('repair_steps', [
             'repair_job_id' => $repairJob->id,
             'step_type' => 'status_change',
         ]);
+        $this->assertDatabaseHas('notifications', [
+            'notifiable_id' => $repairJob->technician_id,
+            'type' => 'App\\Notifications\\RepairStatusChangedNotification',
+        ]);
+    }
+
+    public function test_does_not_notify_when_repair_status_does_not_change(): void
+    {
+        $repairJob = RepairJob::factory()->create(['status' => 'pending']);
+
+        $response = $this->actingAs($this->user)->put(route('repair-jobs.update', $repairJob), [
+            'status' => 'pending',
+        ]);
+
+        $response->assertRedirect(route('repair-jobs.show', $repairJob));
+        $this->assertDatabaseCount('notifications', 0);
     }
 
     public function test_can_add_repair_step(): void
