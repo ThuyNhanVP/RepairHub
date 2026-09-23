@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\RepairJob;
-use App\Models\RepairStep;
 use App\Models\User;
+use App\Notifications\RepairStatusChangedNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -70,6 +70,14 @@ class RepairJobController extends Controller
                 'title' => 'Cập nhật trạng thái',
                 'content' => "Chuyển trạng thái từ '{$originalStatus}' sang '{$data['status']}'",
             ]);
+
+            $repairJob->load(['technician', 'reception.user']);
+            collect([$repairJob->technician, $repairJob->reception?->user])
+                ->filter()
+                ->unique('id')
+                ->each(fn (User $recipient) => $recipient->notify(
+                    new RepairStatusChangedNotification($repairJob, $originalStatus)
+                ));
         }
 
         return redirect()->route('repair-jobs.show', $repairJob)
@@ -95,11 +103,11 @@ class RepairJobController extends Controller
         ]);
 
         $data['user_id'] = auth()->id();
-        
+
         $repairJob->steps()->create($data);
 
         // Update repair job cost if part_used
-        if ($data['step_type'] === 'part_used' && !empty($data['cost'])) {
+        if ($data['step_type'] === 'part_used' && ! empty($data['cost'])) {
             $repairJob->increment('final_cost', $data['cost']);
         }
 
