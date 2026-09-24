@@ -1,87 +1,303 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# RepairHub
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+RepairHub là hệ thống quản lý trung tâm sửa chữa thiết bị điện tử. Ứng dụng quản lý quy trình từ lúc tiếp nhận thiết bị, phân công sửa chữa, quản lý linh kiện đến bảo hành và yêu cầu bảo hành.
 
-## About Laravel
+## Tính năng
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Đăng nhập và đăng xuất nhân viên.
+- Quản lý khách hàng.
+- Quản lý thiết bị của khách hàng.
+- Tiếp nhận thiết bị sửa chữa.
+- Theo dõi công việc sửa chữa và nhật ký sửa chữa.
+- Quản lý linh kiện:
+  - CRUD linh kiện.
+  - Phân loại linh kiện.
+  - Nhập, xuất và điều chỉnh tồn kho.
+  - Cảnh báo linh kiện sắp hết.
+- Quản lý phiếu bảo hành.
+- Tiếp nhận và xử lý yêu cầu bảo hành.
+- Dashboard thống kê:
+  - Tổng số phiếu tiếp nhận.
+  - Công việc đang sửa chữa.
+  - Doanh thu tháng.
+  - Phiếu bảo hành còn hạn.
+  - Yêu cầu bảo hành đang xử lý.
+  - Linh kiện sắp hết.
+- Database notification khi trạng thái công việc sửa chữa thay đổi.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Công nghệ sử dụng
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| Thành phần | Công nghệ |
+| --- | --- |
+| Backend | Laravel 13, PHP 8.3+ |
+| Frontend | Blade, Tailwind CSS 4, Vite |
+| Database | MySQL 8.4 hoặc SQLite dùng cho test |
+| Cache/Session/Queue | Database mặc định, Redis trong Docker |
+| Email local | Mailpit |
+| Kiểm thử | PHPUnit 12 |
+| Code style | Laravel Pint |
+| Container | Docker Compose |
 
-## Learning Laravel
+## Yêu cầu môi trường
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Chạy local trên Windows/Laragon
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- PHP 8.3 trở lên.
+- Composer 2.x.
+- Node.js và npm.
+- MySQL nếu không sử dụng SQLite.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+### Chạy bằng Docker
 
-## Local Development with Docker
+- Docker Desktop.
+- Docker Compose plugin.
 
-Run the application stack with Docker Compose:
+## Cài đặt local
 
-```bash
+Clone repository và đi vào thư mục dự án:
+
+```powershell
+git clone <repository-url>
+cd TotNghiep
+```
+
+Cài dependency và khởi tạo ứng dụng:
+
+```powershell
+composer install
+Copy-Item .env.example .env
+php artisan key:generate
+```
+
+Trong `.env`, cấu hình database phù hợp với môi trường local. Ví dụ khi MySQL chạy trực tiếp trên máy:
+
+```dotenv
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=totnghiep
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+Chạy migration và seed dữ liệu nền:
+
+```powershell
+php artisan migrate --seed
+```
+
+Cài và build frontend:
+
+```powershell
+npm install
+npm run build
+```
+
+Khởi động server local:
+
+```powershell
+php artisan serve
+```
+
+Ứng dụng mặc định chạy tại <http://127.0.0.1:8000>.
+
+Trong quá trình phát triển frontend, có thể dùng Vite ở chế độ watch:
+
+```powershell
+npm run dev
+```
+
+## Cài đặt bằng Docker
+
+Docker Compose đã cấu hình các service:
+
+| Service | Container | Cổng host | Mục đích |
+| --- | --- | --- | --- |
+| `app` | `repairhub-app` | nội bộ | PHP-FPM và Laravel |
+| `nginx` | `repairhub-nginx` | `8000` | Web server |
+| `mysql` | `repairhub-mysql` | `3307` | MySQL 8.4 |
+| `redis` | `repairhub-redis` | `6379` | Cache/queue |
+| `mailpit` | `repairhub-mailpit` | `8025`, `1025` | Email local |
+
+Khởi động toàn bộ stack:
+
+```powershell
 docker compose up -d --build
 ```
 
-The stack includes:
+Service `app` tự chạy `key:generate` và `migrate` khi khởi động. Nếu cần chạy thủ công:
 
-- Laravel app (`app`)
-- Nginx (`nginx`)
-- MySQL (`mysql`)
-- Redis (`redis`)
-- Mailpit (`mailpit`)
-
-Useful URLs:
-
-- Application: http://localhost:8000
-- Mailpit: http://localhost:8025
-
-After the containers are up, run:
-
-```bash
-docker compose exec app composer install
-docker compose exec app php artisan key:generate
-docker compose exec app php artisan migrate
+```powershell
+docker compose exec app php artisan migrate --seed
+docker compose exec app npm install
+docker compose exec app npm run build
 ```
 
-## Agentic Development
+Các địa chỉ thường dùng:
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+- Ứng dụng: <http://localhost:8000>
+- Mailpit: <http://localhost:8025>
+- MySQL từ máy host: `127.0.0.1:3307`
+- Redis từ máy host: `127.0.0.1:6379`
 
-```bash
-composer require laravel/boost --dev
+Xem log hoặc dừng stack:
 
-php artisan boost:install
+```powershell
+docker compose logs -f app
+docker compose down
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Tài khoản mặc định
 
-## Contributing
+Khi chạy seeder, tài khoản quản trị được tạo:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```text
+Email: admin@repairhub.test
+Mật khẩu: password123
+```
 
-## Code of Conduct
+Không sử dụng mật khẩu này trong môi trường production.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Kiểm thử và kiểm tra code
 
-## Security Vulnerabilities
+Chạy toàn bộ test:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```powershell
+php artisan test --compact
+```
+
+Hoặc dùng script Composer:
+
+```powershell
+composer test
+```
+
+Format các file PHP đã thay đổi:
+
+```powershell
+vendor\bin\pint --dirty --format agent
+```
+
+Kiểm tra whitespace trong diff:
+
+```powershell
+git diff --check
+```
+
+Build frontend production:
+
+```powershell
+npm run build
+```
+
+Test sử dụng SQLite in-memory theo cấu hình trong `phpunit.xml`, nên không cần database MySQL để chạy test.
+
+## Cấu trúc chính
+
+```text
+app/
+├── Http/Controllers/
+│   ├── Auth/
+│   ├── CustomerController.php
+│   ├── DashboardController.php
+│   ├── PartController.php
+│   ├── ReceptionController.php
+│   ├── RepairJobController.php
+│   ├── WarrantyController.php
+│   └── WarrantyClaimController.php
+├── Models/
+├── Notifications/
+└── Providers/
+
+database/
+├── factories/
+├── migrations/
+└── seeders/
+
+resources/
+├── css/
+├── js/
+└── views/
+
+routes/
+└── web.php
+
+tests/
+├── Feature/
+└── Unit/
+```
+
+## Quy trình nghiệp vụ chính
+
+```text
+Khách hàng
+    ↓
+Tiếp nhận thiết bị
+    ↓
+Tạo công việc sửa chữa
+    ↓
+Chẩn đoán / báo giá / sửa chữa
+    ↓
+Hoàn tất sửa chữa
+    ↓
+Tạo phiếu bảo hành
+    ↓
+Tiếp nhận yêu cầu bảo hành nếu phát sinh
+```
+
+Khi trạng thái `RepairJob` thay đổi, hệ thống tạo database notification cho kỹ thuật viên và nhân viên phụ trách phiếu tiếp nhận.
+
+## Phát triển theo Git
+
+Tạo branch từ `develop` trước khi bắt đầu feature mới:
+
+```powershell
+git checkout develop
+git pull origin develop
+git checkout -b feature/ten-feature
+```
+
+Trước khi commit:
+
+```powershell
+php artisan test --compact
+vendor\bin\pint --dirty --format agent
+git diff --check
+```
+
+Commit và push:
+
+```powershell
+git add .
+git commit -m "feat: mô tả thay đổi" -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"
+git push -u origin feature/ten-feature
+```
+
+Pull Request nên target vào branch `develop`.
+
+## Biến môi trường quan trọng
+
+Không commit file `.env` hoặc thông tin bí mật. Sử dụng `.env.example` làm mẫu và cấu hình riêng cho từng môi trường.
+
+Một số biến chính:
+
+```dotenv
+APP_URL=http://localhost:8000
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=repairhub
+DB_USERNAME=repairhub
+DB_PASSWORD=secret
+QUEUE_CONNECTION=database
+CACHE_STORE=database
+MAIL_MAILER=smtp
+MAIL_HOST=mailpit
+MAIL_PORT=1025
+```
+
+Khi chạy local ngoài Docker, thay `DB_HOST=mysql` bằng `127.0.0.1` và dùng cổng MySQL local tương ứng.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Dự án được phát hành theo giấy phép MIT.
