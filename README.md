@@ -297,7 +297,3 @@ MAIL_PORT=1025
 ```
 
 Khi chạy local ngoài Docker, thay `DB_HOST=mysql` bằng `127.0.0.1` và dùng cổng MySQL local tương ứng.
-
-## License
-
-Dự án được phát hành theo giấy phép MIT.
