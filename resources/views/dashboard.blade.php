@@ -16,13 +16,49 @@
                     <h1 class="cust-title">Dashboard RepairHub</h1>
                     <p class="text-sm" style="color: var(--color-cust-muted);">Tổng quan hoạt động sửa chữa và bảo hành</p>
                 </div>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="cust-btn cust-btn-secondary">Đăng xuất</button>
-                </form>
+                <div class="flex items-center gap-3">
+                    <a href="{{ route('notifications.index') }}" class="relative inline-flex items-center justify-center rounded-full border border-slate-700 bg-slate-900 p-2 text-slate-200 transition hover:border-blue-500 hover:text-white" aria-label="Thông báo">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 1-5.714 0M17.25 8.75A5.25 5.25 0 1 0 6.75 8.75c0 5.25-2.625 6.375-2.625 6.375h17.75S17.25 14 17.25 8.75Z"/>
+                        </svg>
+                        @if (($notificationSummary['unreadCount'] ?? 0) > 0)
+                            <span class="absolute -right-1 -top-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-semibold text-white">
+                                {{ $notificationSummary['unreadCount'] }}
+                            </span>
+                        @endif
+                    </a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="cust-btn cust-btn-secondary">Đăng xuất</button>
+                    </form>
+                </div>
             </div>
         </header>
         <main class="cust-main">
+            @if (($notificationSummary['recentNotifications'] ?? collect())->isNotEmpty())
+                <div class="mb-6 cust-card">
+                    <div class="cust-card-header flex items-center justify-between">
+                        <h2 class="cust-title-main">Thông báo gần đây</h2>
+                        <a href="{{ route('notifications.index') }}" class="cust-link">Xem tất cả</a>
+                    </div>
+                    <div class="cust-card-body space-y-3">
+                        @foreach ($notificationSummary['recentNotifications'] as $notification)
+                            @php $data = $notification->data ?? []; @endphp
+                            <a href="{{ ! empty($data['repair_job_id']) ? route('repair-jobs.show', $data['repair_job_id']) : route('notifications.index') }}" class="block rounded-lg border p-3 transition hover:border-blue-500 @if (is_null($notification->read_at)) border-blue-500/60 bg-blue-500/5 @else border-slate-700 bg-slate-900/40 @endif">
+                                <div class="flex items-start justify-between gap-3">
+                                    <div>
+                                        <p class="font-medium text-white">{{ $data['title'] ?? 'Thông báo hệ thống' }}</p>
+                                        <p class="mt-1 text-sm text-slate-300">{{ $data['message'] ?? 'Bạn có thông báo mới.' }}</p>
+                                    </div>
+                                    @if (is_null($notification->read_at))
+                                        <span class="rounded-full bg-blue-500/20 px-2 py-1 text-[10px] font-medium uppercase tracking-wide text-blue-200">Mới</span>
+                                    @endif
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
                 @foreach ([
                     ['label' => 'Tổng tiếp nhận', 'value' => $summary['totalReceptions'], 'link' => route('receptions.index')],
