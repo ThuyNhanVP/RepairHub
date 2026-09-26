@@ -47,12 +47,18 @@ class DashboardController extends Controller
             ->limit(5)
             ->get(['id', 'name', 'sku', 'stock_qty', 'min_stock_qty', 'unit']);
 
+        $notificationSummary = [
+            'unreadCount' => auth()->check() ? auth()->user()->unreadNotifications()->count() : 0,
+            'recentNotifications' => auth()->check() ? auth()->user()->notifications()->latest()->limit(5)->get() : collect(),
+        ];
+
         return view('dashboard', compact(
             'summary',
             'repairStatusLabels',
             'repairStatusCounts',
             'recentReceptions',
             'lowStockPartList',
+            'notificationSummary',
             'monthStart',
             'monthEnd',
         ));
