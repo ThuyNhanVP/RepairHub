@@ -2,29 +2,6 @@
 
 RepairHub là hệ thống quản lý trung tâm sửa chữa thiết bị điện tử. Ứng dụng quản lý quy trình từ lúc tiếp nhận thiết bị, phân công sửa chữa, quản lý linh kiện đến bảo hành và yêu cầu bảo hành.
 
-## Tính năng
-
-- Đăng nhập và đăng xuất nhân viên.
-- Quản lý khách hàng.
-- Quản lý thiết bị của khách hàng.
-- Tiếp nhận thiết bị sửa chữa.
-- Theo dõi công việc sửa chữa và nhật ký sửa chữa.
-- Quản lý linh kiện:
-  - CRUD linh kiện.
-  - Phân loại linh kiện.
-  - Nhập, xuất và điều chỉnh tồn kho.
-  - Cảnh báo linh kiện sắp hết.
-- Quản lý phiếu bảo hành.
-- Tiếp nhận và xử lý yêu cầu bảo hành.
-- Dashboard thống kê:
-  - Tổng số phiếu tiếp nhận.
-  - Công việc đang sửa chữa.
-  - Doanh thu tháng.
-  - Phiếu bảo hành còn hạn.
-  - Yêu cầu bảo hành đang xử lý.
-  - Linh kiện sắp hết.
-- Database notification khi trạng thái công việc sửa chữa thay đổi.
-
 ## Công nghệ sử dụng
 
 | Thành phần | Công nghệ |
