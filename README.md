@@ -35,7 +35,7 @@ Clone repository và đi vào thư mục dự án:
 
 ```powershell
 git clone <repository-url>
-cd TotNghiep
+cd 
 ```
 
 Cài dependency và khởi tạo ứng dụng:
